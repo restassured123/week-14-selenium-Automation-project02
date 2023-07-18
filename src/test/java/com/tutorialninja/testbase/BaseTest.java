@@ -9,21 +9,20 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
+
 public class BaseTest extends Utility {
+
     String browser = PropertyReader.getInstance().getProperty("browser");
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setUp(){
-
         selectBrowser(browser);
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void tearDown(){
-
-        closerBrowser();
+        closeBrowser();
     }
-
     public void verifyTwoStrings(By by, String text){
         String expected =text;
         String actual = getTextFromElement(by);

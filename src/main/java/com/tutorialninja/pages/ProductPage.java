@@ -1,19 +1,33 @@
 package com.tutorialninja.pages;
 
+import com.aventstack.extentreports.Status;
+import com.tutorialninja.customlisteners.CustomListeners;
 import com.tutorialninja.utilities.Utility;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
+import org.openqa.selenium.support.FindBy;
+import org.testng.Reporter;
 
 import java.util.List;
 
 public class ProductPage extends Utility {
-    By calendar = By.xpath("//div[@class = 'input-group date']//button");
+    @CacheLookup
+    @FindBy(xpath = "//div[@class = 'input-group date']//button")
+    WebElement calendar;
     By monthAndyear = By.xpath("//div[@class = 'datepicker']/div[1]//th[@class='picker-switch']");
     By nextIcon = By.xpath("//div[@class = 'datepicker']/div[1]//th[@class='next']");
     By alldates = By.xpath("//div[@class = 'datepicker']/div[1]//tbody/tr/td[@class = 'day']");
+
     By quantity = By.name("quantity");
-    By addToCart = By.xpath("//button[@id='button-cart']");
-    By shoppingCart = By.xpath("//a[contains(text(),'shopping cart')]");
+
+    @CacheLookup
+    @FindBy(xpath = "//button[@id='button-cart']")
+    WebElement addToCart;
+
+    @CacheLookup
+    @FindBy(xpath = "//a[contains(text(),'shopping cart')]")
+    WebElement shoppingCart;
 
     public void datePicker(String y, String m, String d) {
         String year = y;
@@ -46,9 +60,13 @@ public class ProductPage extends Utility {
         sendTextToElement(quantity,"1");
     }
     public void clickOnAddToCart(){
+        Reporter.log("click On Add To Cart" + addToCart.toString());
+        CustomListeners.test.log(Status.PASS, "click On Add To Cart" + addToCart);
         clickOnElement(addToCart);
     }
     public void clickOnShoppingCart(){
+        Reporter.log("click On Shopping Cart" + shoppingCart.toString());
+        CustomListeners.test.log(Status.PASS, "click On Shopping Cart" + shoppingCart);
         clickOnElement(shoppingCart);
     }
 

@@ -1,15 +1,20 @@
 package com.tutorialninja.testsuite;
 
+import com.tutorialninja.customlisteners.CustomListeners;
 import com.tutorialninja.pages.*;
 import com.tutorialninja.testbase.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+@Listeners(CustomListeners.class)
 
 public class LaptopsAndNotebooksTest extends BaseTest {
 
@@ -18,7 +23,16 @@ public class LaptopsAndNotebooksTest extends BaseTest {
     LaptopsAndNotebooksPage laptopsAndNotebooksPage = new LaptopsAndNotebooksPage();
     ShoppingCartPage shoppingCartPage = new ShoppingCartPage();
 
-    @Test
+    @BeforeMethod(alwaysRun = true)
+    public void inIt() {
+        homePage = new HomePage();
+        productPage = new ProductPage();
+        laptopsAndNotebooksPage = new LaptopsAndNotebooksPage();
+        shoppingCartPage = new ShoppingCartPage();
+
+    }
+
+    @Test(groups = {"smoke", "regression"})
     public void verifyProductsPriceDisplayHighToLowSuccessfully() throws InterruptedException {
         homePage.mouseHoverOnLaptopsAndClick();
         homePage.selectMenu("Show AllLaptops & Notebooks");
@@ -46,10 +60,10 @@ public class LaptopsAndNotebooksTest extends BaseTest {
         }
         //System.out.println(afterSortByPrice);
         //1.4 Verify the Product price will arrange in High to Low order.
-        Assert.assertEquals(afterSortByPrice,originalProductsPrice,"Product not sorted by price High to Low");
+        Assert.assertEquals(afterSortByPrice, originalProductsPrice, "Product not sorted by price High to Low");
     }
 
-    @Test
+    @Test(groups = {"sanity", "regression"})
     public void verifyThatUserPlaceOrderSuccessfully() throws InterruptedException {
 
         homePage.selectCurrency();
@@ -59,17 +73,17 @@ public class LaptopsAndNotebooksTest extends BaseTest {
         laptopsAndNotebooksPage.selectSorting("Price (High > Low)");
         Thread.sleep(3000);
         laptopsAndNotebooksPage.clickOnMacbook();
-        verifyTwoStrings(By.xpath("//h1[contains(text(),'MacBook')]"),"MacBook");
+        verifyTwoStrings(By.xpath("//h1[contains(text(),'MacBook')]"), "MacBook");
         productPage.clickOnAddToCart();
         Thread.sleep(3000);
-        Assert.assertTrue(getTextFromElement(By.cssSelector("body:nth-child(2) div.container:nth-child(4) > div.alert.alert-success.alert-dismissible")).contains("Success: You have added MacBook to your shopping cart!"),"Product not added to cart");
+        Assert.assertTrue(getTextFromElement(By.cssSelector("body:nth-child(2) div.container:nth-child(4) > div.alert.alert-success.alert-dismissible")).contains("Success: You have added MacBook to your shopping cart!"), "Product not added to cart");
         productPage.clickOnShoppingCart();
         Assert.assertTrue(getTextFromElement(By.xpath("//div[@id='content']//h1")).contains("Shopping Cart"));
-        verifyTwoStrings(By.xpath("//div[@class = 'table-responsive']/table/tbody/tr/td[2]/a"),"MacBook");
+        verifyTwoStrings(By.xpath("//div[@class = 'table-responsive']/table/tbody/tr/td[2]/a"), "MacBook");
         shoppingCartPage.changeQuantity("2");
         shoppingCartPage.clickOnUpdate();
-        Assert.assertTrue(getTextFromElement(By.xpath("//div[@id='checkout-cart']/div[1]")).contains("Success: You have modified your shopping cart!"),"Cart not modified");
-        verifyTwoStrings(By.xpath("//div[@class = 'table-responsive']/table/tbody/tr/td[6]"),"£737.45");
+        Assert.assertTrue(getTextFromElement(By.xpath("//div[@id='checkout-cart']/div[1]")).contains("Success: You have modified your shopping cart!"), "Cart not modified");
+        verifyTwoStrings(By.xpath("//div[@class = 'table-responsive']/table/tbody/tr/td[6]"), "£737.45");
 
 
     }

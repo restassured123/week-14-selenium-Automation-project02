@@ -3,23 +3,28 @@ package com.tutorialninja.browserfactory;
 import com.tutorialninja.propertyreader.PropertyReader;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.PageFactory;
 
 import java.time.Duration;
 
+
 public class ManageBrowser {
     public static WebDriver driver;
-
     static String baseUrl = PropertyReader.getInstance().getProperty("baseUrl");
 
-    public void selectBrowser(String browser) {
+    public ManageBrowser(){
+        PageFactory.initElements(driver,this);
+    }
+
+    public void selectBrowser(String browser){
         if (browser.equalsIgnoreCase("chrome")) {
             driver = new ChromeDriver();
         } else if (browser.equalsIgnoreCase("firefox")) {
             driver = new FirefoxDriver();
-        } else if (browser.equalsIgnoreCase("edge")) {
-            driver = new EdgeDriver();
+        } else if (browser.equalsIgnoreCase("ie")) {
+            driver = new InternetExplorerDriver();
         } else {
             System.out.println("Wrong browser name");
         }
@@ -28,8 +33,8 @@ public class ManageBrowser {
         driver.get(baseUrl);
     }
 
-    public void closerBrowser() {
-        if (driver != null) {
+    public void closeBrowser(){
+        if (driver!= null){
             driver.quit();
         }
     }

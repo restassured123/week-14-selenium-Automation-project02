@@ -1,36 +1,54 @@
 package com.tutorialninja.testsuite;
 
+import com.tutorialninja.customlisteners.CustomListeners;
 import com.tutorialninja.pages.*;
 import com.tutorialninja.testbase.BaseTest;
 import org.openqa.selenium.By;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-public class MyAccountsTest extends BaseTest {
-    HomePage homePage = new HomePage();
-    DesktopPage desktopsPage = new DesktopPage();
-    ProductPage productPage = new ProductPage();
-    LaptopsAndNotebooksPage laptopsAndNotebooksPage = new LaptopsAndNotebooksPage();
-    ShoppingCartPage shoppingCartPage = new ShoppingCartPage();
-    RegisterPage registerPage = new RegisterPage();
-    AccountPage accountPage = new AccountPage();
-    LogOutPage logOutPage = new LogOutPage();
-    LoginPage loginPage = new LoginPage();
+@Listeners(CustomListeners.class)
 
-    @Test
+public class MyAccountsTest extends BaseTest {
+    HomePage homePage;
+    DesktopPage desktopsPage;
+    ProductPage productPage;
+    LaptopsAndNotebooksPage laptopsAndNotebooksPage;
+    ShoppingCartPage shoppingCartPage;
+    RegisterPage registerPage;
+    AccountPage accountPage;
+    LogOutPage logOutPage;
+    LoginPage loginPage;
+
+    @BeforeMethod(alwaysRun = true)
+    public void inIt() {
+        homePage = new HomePage();
+        desktopsPage = new DesktopPage();
+        productPage = new ProductPage();
+        laptopsAndNotebooksPage = new LaptopsAndNotebooksPage();
+        shoppingCartPage = new ShoppingCartPage();
+        registerPage = new RegisterPage();
+        accountPage = new AccountPage();
+        loginPage = new LoginPage();
+        loginPage = new LoginPage();
+    }
+
+    @Test(groups = {"sanity", "regression"})
     public void verifyUserShouldNavigateToRegisterPageSuccessfully() {
         homePage.clickOnMyAccount();
         homePage.selectMyAccountOptions("Register");
-        verifyTwoStrings(By.xpath("//h1[contains(text(),'Register Account')]"),"Register Account");
+        verifyTwoStrings(By.xpath("//h1[contains(text(),'Register Account')]"), "Register Account");
     }
 
-    @Test
+    @Test(groups = {"smoke", "regression"})
     public void verifyUserShouldNavigateToLoginPageSuccessfully() {
         homePage.clickOnMyAccount();
         homePage.selectMyAccountOptions("Login");
-        verifyTwoStrings(By.xpath("//h2[contains(text(),'Returning Customer')]"),"Returning Customer");
+        verifyTwoStrings(By.xpath("//h2[contains(text(),'Returning Customer')]"), "Returning Customer");
     }
 
-    @Test
+    @Test(groups = {"regression"})
     public void verifyThatUserRegisterAccountSuccessfully() {
         homePage.clickOnMyAccount();
         homePage.selectMyAccountOptions("Register");
@@ -43,16 +61,16 @@ public class MyAccountsTest extends BaseTest {
         registerPage.clickOnSubscribe();
         registerPage.clickOnPolicy();
         registerPage.clickOnContinueButton();
-        verifyTwoStrings(By.xpath("//h1[contains(text(),'Your Account Has Been Created!')]"),"Your Account Has Been Created!");
+        verifyTwoStrings(By.xpath("//h1[contains(text(),'Your Account Has Been Created!')]"), "Your Account Has Been Created!");
         accountPage.clickOnContinue();
         homePage.clickOnMyAccount();
         homePage.selectMyAccountOptions("Logout");
-        verifyTwoStrings(By.xpath("//h1[contains(text(),'Account Logout')]"),"Account Logout");
+        verifyTwoStrings(By.xpath("//h1[contains(text(),'Account Logout')]"), "Account Logout");
         logOutPage.clickOnLogout();
     }
 
-    @Test
-    public void verifyThatUserShouldLoginAndLogoutSuccessfully(){
+    @Test(groups = {"smoke", "sanity", "regression"})
+    public void verifyThatUserShouldLoginAndLogoutSuccessfully() {
         homePage.clickOnMyAccount();
         homePage.selectMyAccountOptions("Login");
         loginPage.enterEmail("prime1233@gmail.com");
@@ -60,7 +78,7 @@ public class MyAccountsTest extends BaseTest {
         loginPage.clickOnLogin();
         homePage.clickOnMyAccount();
         homePage.selectMyAccountOptions("Logout");
-        verifyTwoStrings( By.xpath("//h1[contains(text(),'Account Logout')]"),"Account Logout");
+        verifyTwoStrings(By.xpath("//h1[contains(text(),'Account Logout')]"), "Account Logout");
         logOutPage.clickOnLogout();
     }
 

@@ -1,56 +1,119 @@
 package com.tutorialninja.utilities;
 
 import com.tutorialninja.browserfactory.ManageBrowser;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.function.Function;
 
+
 public class Utility extends ManageBrowser {
+    /*Utility Class extends to ManageDriver for the driver to finding locators
+     *All common methods are fixed in the utility Class.
+     *
+     * This method will generate random number
+     */
+    public int generateRandomNumber() {
+        return (int) (Math.random() * 5000 + 1);
+
+    }
+
+    /**
+     * This method will generate random string
+     */
+    public static String getRandomString(int length) {
+        StringBuilder sb = new StringBuilder();
+        String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        for (int i = 0; i < length; i++) {
+            int index = (int) (Math.random() * characters.length());
+            sb.append(characters.charAt(index));
+        }
+        return sb.toString();
+    }
+
     /**
      * This method will click on element
      */
     public void clickOnElement(By by) {
-        WebElement loginLink = driver.findElement(by);
-        loginLink.click();
+        WebElement element = driver.findElement(by);
+        element.click();
+    }
+
+    //Or
+    public void clickOnElement(WebElement element) {
+        element.click();
     }
 
     /**
      * This method will get text from element
      */
     public String getTextFromElement(By by) {
-
-
         return driver.findElement(by).getText();
+    }
+
+    //Or
+    public String getTextFromElement(WebElement element) {
+        return element.getText();
     }
 
     /**
      * This method will send text on element
      */
     public void sendTextToElement(By by, String text) {
-        driver.findElement(by).clear();
         driver.findElement(by).sendKeys(text);
     }
 
-    public String getAttributeValue(By by, String name) {
-
-
-        return driver.findElement(by).getAttribute(name);
+    //Or
+    public void sendTextToElement(WebElement element, String str) {
+        element.sendKeys(str);
     }
 
-//************************* Alert Methods *****************************************************
+    /**
+     * This method will return list of web elements
+     */
+    public List<WebElement> webElementList(By by) {
+        return driver.findElements(by);
+    }
+
+
+    /**
+     * This method will clear previous stored data
+     */
+    public void clearTextFromField(By by) {
+        driver.findElement(by).sendKeys(Keys.CONTROL + "a");
+        driver.findElement(by).sendKeys(Keys.DELETE);
+    }
+
+    //Or
+    public void clearTextFromField(WebElement element) {
+        element.sendKeys(Keys.CONTROL + "a");
+        element.sendKeys(Keys.DELETE);
+    }
+
+    public void sendTabAndEnterKey(By by) {
+        driver.findElement(by).sendKeys(Keys.TAB);
+        //driver.findElement(by).sendKeys(Keys.ENTER);
+    }
+
+    public void sendTabAndEnterKey(WebElement element) {
+        element.sendKeys(Keys.TAB);
+        //driver.findElement(by).sendKeys(Keys.ENTER);
+    }
+
+//*************************** Alert Methods ***************************************//
 
     /**
      * This method will switch to alert
      */
     public void switchToAlert() {
-
         driver.switchTo().alert();
     }
 
@@ -58,7 +121,6 @@ public class Utility extends ManageBrowser {
      * This method will accept alert
      */
     public void acceptAlert() {
-
         driver.switchTo().alert().accept();
     }
 
@@ -66,7 +128,6 @@ public class Utility extends ManageBrowser {
      * This method will dismiss alert
      */
     public void dismissAlert() {
-
         driver.switchTo().alert().dismiss();
     }
 
@@ -74,7 +135,6 @@ public class Utility extends ManageBrowser {
      * This method will get text from alert
      */
     public String getTextFromAlert() {
-
         return driver.switchTo().alert().getText();
     }
 
@@ -82,7 +142,6 @@ public class Utility extends ManageBrowser {
      * This method will send text from alert
      */
     public void sendTextToAlert(String text) {
-
         driver.switchTo().alert().sendKeys(text);
     }
 
@@ -94,28 +153,41 @@ public class Utility extends ManageBrowser {
      */
     public void selectByVisibleTextFromDropDown(By by, String text) {
         WebElement dropDown = driver.findElement(by);
-        org.openqa.selenium.support.ui.Select select = new org.openqa.selenium.support.ui.Select(dropDown);
+        Select select = new Select(dropDown);
         select.selectByVisibleText(text);
+
+    }
+
+
+    public void selectByVisibleTextFromDropDown(WebElement element, String text) {
+        new Select(element).selectByVisibleText(text);
     }
 
     /**
      * This method will select the option by value
      */
     public void selectByValueFromDropDown(By by, String value) {
-        new org.openqa.selenium.support.ui.Select(driver.findElement(by)).selectByValue(value);
+        new Select(driver.findElement(by)).selectByValue(value);
+    }
+
+    public void selectByValueFromDropDown(WebElement element, String value) {
+        new Select(element).selectByValue(value);
     }
 
     /**
      * This method will select the option by index
      */
     public void selectByIndexFromDropDown(By by, int index) {
-        new org.openqa.selenium.support.ui.Select(driver.findElement(by)).selectByIndex(index);
+        new Select(driver.findElement(by)).selectByIndex(index);
+    }
+
+    public void selectByIndexFromDropDown(WebElement element, int index) {
+        new Select(element).selectByIndex(index);
     }
 
     /**
      * This method will select the option by contains text
      */
-
     public void selectByContainsTextFromDropDown(By by, String text) {
         List<WebElement> allOptions = new Select(driver.findElement(by)).getOptions();
         for (WebElement options : allOptions) {
@@ -165,12 +237,12 @@ public class Utility extends ManageBrowser {
      */
     public void mouseHoverToElement(By by) {
         Actions actions = new Actions(driver);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         actions.moveToElement(driver.findElement(by)).build().perform();
+    }
+
+    public void mouseHoverToElement(WebElement element) {
+        Actions actions = new Actions(driver);
+        actions.moveToElement(element).perform();
     }
 
     /**
@@ -178,18 +250,27 @@ public class Utility extends ManageBrowser {
      */
     public void mouseHoverToElementAndClick(By by) {
         Actions actions = new Actions(driver);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        actions.moveToElement(driver.findElement(by)).click().build().perform();
+        actions.moveToElement(driver.findElement(by)).click().perform();
     }
+
+    public void mouseHoverToElementAndClick(WebElement element) {
+        Actions actions = new Actions(driver);
+        actions.moveToElement(element).click().perform();
+    }
+
     public void mouseHoverFromOneElementToAnotherAndClick(By by1, By by2) {
         WebElement text1 = driver.findElement(by1);
         WebElement text2 = driver.findElement(by2);
-        Actions actions= new Actions(driver);
+        Actions actions = new Actions(driver);
         actions.moveToElement(text1).moveToElement(text2).click().build().perform();
+
+    }
+
+    public void mouseHoverFromOneElementToAnotherAndClick(WebElement element, WebElement element1) {
+        WebElement text1 = element;
+        WebElement text2 = element1;
+        Actions actions = new Actions(driver);
+        actions.moveToElement(element).moveToElement(element1).click().build().perform();
 
     }
 
@@ -211,13 +292,107 @@ public class Utility extends ManageBrowser {
 
         WebElement element = wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
-
                 return driver.findElement(by);
             }
         });
         return element;
     }
 
+//***************************** Is Display Methods **********************************************//
+
+    /**
+     * This method will verify that element is displayed
+     */
+    public boolean verifyThatElementIsDisplayed(By by) {
+        WebElement element = driver.findElement(by);
+        if (element.isDisplayed()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean verifyThatElementIsDisplayed(WebElement element) {
+        if (element.isDisplayed()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * This method will verify that element is displayed
+     */
+    public boolean verifyThatTextIsDisplayed(By by, String text) {
+        WebElement element = driver.findElement(by);
+        if (text.equals(element.getText())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean verifyThatTextIsDisplayed(WebElement element, String text) {
+        if (text.equals(element.getText())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //************************** ScreenShot Methods *********************************************//
+
+    /**
+     * This method will take screenshot
+     */
+    public static void takeScreenShot() {
+        String filePath = System.getProperty("user.dir") + "/src/main/java/com/nopcommerce/demo/screenshots/";
+        TakesScreenshot screenshot = (TakesScreenshot) driver;
+        File scr1 = screenshot.getScreenshotAs(OutputType.FILE);
+        try {
+            FileUtils.copyFile(scr1, new File(filePath + getRandomString(10) + ".jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String currentTimeStamp() {
+        Date d = new Date();
+        return d.toString().replace(":", "_").replace(" ", "_");
+    }
+
+    public static String getScreenshot(WebDriver driver, String screenshotName) {
+        String dateName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+        TakesScreenshot ts = (TakesScreenshot) driver;
+        File source = ts.getScreenshotAs(OutputType.FILE);
+
+        // After execution, you could see a folder "FailedTestsScreenshots" under screenshot folder
+        String destination = System.getProperty("user.dir") + "/src/main/java/com/demo/nopcommerce/screenshots/" + screenshotName + dateName + ".png";
+        File finalDestination = new File(destination);
+        try {
+            FileUtils.copyFile(source, finalDestination);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return destination;
+    }
+
+    /*
+     *Screenshot methods
+     */
+    public static String takeScreenShot(String fileName) {
+        String filePath = System.getProperty("user.dir") + "/test-output/html/";
+        TakesScreenshot screenshot = (TakesScreenshot) driver;
+        File scr1 = screenshot.getScreenshotAs(OutputType.FILE);
+        String imageName = fileName + currentTimeStamp() + ".jpg";
+        String destination = filePath + imageName;
+        try {
+            FileUtils.copyFile(scr1, new File(destination));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return destination;
+    }
     public static String getAlphaNumericString(int n) {
         // chose a Character random from this String
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -234,5 +409,4 @@ public class Utility extends ManageBrowser {
         }
         return sb.toString();
     }
-
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Tutorialninja Test"
+           tests="2"
+           failures="0"
+           errors="0"
+           skipped="0"
+           time="48.133">
+  <properties />
+  
+  
+            <testcase name="verifyProductArrangeInAlphabeticalOrder" time="9.747" classname="com.tutorialninja.testsuite.DesktopsPageTest" />
+                <testcase name="verifyProductAddedToShoppingCartSuccessFully" time="38.386" classname="com.tutorialninja.testsuite.DesktopsPageTest" />
+      
+</testsuite>

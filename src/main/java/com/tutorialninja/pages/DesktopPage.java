@@ -1,28 +1,59 @@
 package com.tutorialninja.pages;
 
+import com.aventstack.extentreports.Status;
+import com.tutorialninja.customlisteners.CustomListeners;
 import com.tutorialninja.utilities.Utility;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
+import org.openqa.selenium.support.FindBy;
+import org.testng.Reporter;
 
 import java.util.List;
 
 public class DesktopPage extends Utility {
-    By sortByAToZ = By.id("input-sort");
-    By hPLP3065 = By.xpath("//a[contains(text(),'HP LP3065')]");
-    By calendar = By.xpath("//div[@class = 'input-group date']//button");
-    By monthAndyear = By.xpath("//div[@class = 'datepicker']/div[1]//th[@class='picker-switch']");
-    By nextIcon = By.xpath("//div[@class = 'datepicker']/div[1]//th[@class='next']");
+    @CacheLookup
+    @FindBy(id = "input-sort")
+    WebElement sortByAToZ;
+    @CacheLookup
+    @FindBy(xpath = "//a[contains(text(),'HP LP3065')]")
+    WebElement hPLP3065;
+    @CacheLookup
+    @FindBy(xpath = "//div[@class = 'input-group date']//button")
+    WebElement calendar;
+    @CacheLookup
+    @FindBy(xpath = "//div[@class = 'datepicker']/div[1]//th[@class='picker-switch']")
+    WebElement monthAndyear;
+
+    @CacheLookup
+    @FindBy(xpath = "//div[@class = 'datepicker']/div[1]//th[@class='next']")
+    WebElement nextIcon;
     By alldates = By.xpath("//div[@class = 'datepicker']/div[1]//tbody/tr/td[@class = 'day']");
-    By quantity = (By.id("input-quantity"));
-    By addToCart = (By.id("button-cart"));
-    By shoppingCartLink = By.xpath("//a[contains(text(),'shopping cart')]");
+
+    @CacheLookup
+    @FindBy(id = "input-quantity")
+    WebElement quantity;
+    @CacheLookup
+    @FindBy(id = "button-cart")
+    WebElement addToCart;
+
+    @CacheLookup
+    @FindBy(xpath = "//a[contains(text(),'shopping cart')]")
+    WebElement shoppingCartLink;
+
 
     public void selectSorting(String text) {
+        Reporter.log("select Sort By Option  " + sortByAToZ.toString());
+        CustomListeners.test.log(Status.PASS, "select Sort By Option " + sortByAToZ);
         selectByVisibleTextFromDropDown(sortByAToZ, text);
     }
-    public void selectHPLP3065(){
+
+    public void selectHPLP3065() {
+        Reporter.log("select HPLP3065  " + hPLP3065.toString());
+        CustomListeners.test.log(Status.PASS, "select HPLP3065  " + hPLP3065);
         clickOnElement(hPLP3065);
     }
+
     public void datePicker(String y, String m, String d) {
         String year = y;
         String month = m;
@@ -48,13 +79,21 @@ public class DesktopPage extends Utility {
         }
     }
 
-    public void clearQuantity(){
-       sendTextToElement(quantity,"1");
+    public void clearQuantity() {
+        Reporter.log("clear Quantity " + quantity.toString());
+        CustomListeners.test.log(Status.PASS, "clear Quantity " + quantity);
+        sendTextToElement(quantity, "1");
     }
-    public void clickOnAddToCart(){
+
+    public void clickOnAddToCart() {
+        Reporter.log("click On Add To Cart" + addToCart.toString());
+        CustomListeners.test.log(Status.PASS, "click On Add To Cart " + addToCart);
         clickOnElement(addToCart);
     }
-    public void clickOnShoppingCartLink(){
+
+    public void clickOnShoppingCartLink() {
+        Reporter.log("click On Shopping Cart Link" + shoppingCartLink.toString());
+        CustomListeners.test.log(Status.PASS, "click On Shopping Cart Link " + shoppingCartLink);
         clickOnElement(shoppingCartLink);
     }
 
